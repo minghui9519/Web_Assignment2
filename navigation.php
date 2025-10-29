@@ -26,9 +26,9 @@
                         <li><a href="promotion.php">Promotion</a></li>
                     </ul>
                 </li>
-                <li><a href="register.php">Workshop</a></li>
-                <li><a href="registration.php">Membership</a></li>
-                <li><a href="enquiry.php">Inquiry</a></li>
+                <li><a href="register_process.php">Workshop</a></li>
+                <li><a href="membership_process.php">Membership</a></li>
+                <li><a href="enquiry_process.php">Inquiry</a></li>
                 <li><a href="login.php">Login</a></li>
             </ul>
         </nav>
