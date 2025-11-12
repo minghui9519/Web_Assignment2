@@ -79,23 +79,45 @@ $stmt->bind_param("ssssss", $name, $email, $phone, $workshopName, $date, $commen
 
 // Run query and display result
 if ($stmt->execute()) {
-    echo "<!DOCTYPE html><html><head><title>Success - Workshop Registration</title>";
-    echo "<link rel='stylesheet' href='styles.css'>";
-    echo "</head><body>";
-    echo "<h2 class='successful'>✅ Workshop Registration Successful!</h2>";
-    echo "<p>Thank you, <b>" . htmlspecialchars($name) . "</b>!</p>";
-    echo "<p>Your registration for <b>" . htmlspecialchars($workshopName) . "</b> has been received.</p>";
-    echo "<p>We will contact you soon to confirm your registration.</p>";
-    echo "<a href='register.php'>⬅ Back to Registration Form</a>";
-    echo "</body></html>";
+    echo "<!DOCTYPE html><html><head><title>Success - Workshop Registration</title>
+     <link rel='stylesheet' href='styles.css'>
+     </head>
+     <body>
+        <div class = 'modal-overlay'>
+            <div class ='modal-card'>
+                <div class = 'card-header header-success'>
+                    <h3>Workshop Registration</h3>
+                </div>
+                <div class ='card-body success-message'>
+                    <h2>✅ Workshop Registration Successful!</h2>
+                    <p>Thank you, <b>" . htmlspecialchars($name) . "</b>!</p>
+                    <p>Your registration for <b>" . htmlspecialchars($workshopName) . "</b> has been received.</p>
+                    <p>We will contact you soon to confirm your registration.</p>
+                    <a class = 'back-btn' href='register.php'>Back to Registration Form</a>
+                </div>
+            </div>
+        </div>
+     </body>
+     </html>";
 } else {
-    echo "<!DOCTYPE html><html><head><title>Error - Workshop Registration</title>";
-    echo "<link rel='stylesheet' href='styles.css'>";
-    echo "</head><body>";
-    echo "<h2 class='error'>❌ Database Error:</h2>";
-    echo "<p>" . htmlspecialchars($conn->error) . "</p>";
-    echo "<a href='register.php'>⬅ Back to Registration Form</a>";
-    echo "</body></html>";
+    echo "<!DOCTYPE html><html><head><title>Error - Workshop Registration</title>
+     <link rel='stylesheet' href='styles.css'>
+     </head>
+     <body>
+        <div class = 'modal-overlay'>
+            <div class ='modal-card'>
+                <div class = 'card-header header-error'>
+                    <h3>⚠️Registration Failed</h3>
+                </div>
+                <div class='card-body error-message'>
+                    <h2>❌Database Error:</h2>
+                    <p>" . htmlspecialchars($conn->error) . "</p>
+                    <a class = 'back-btn error-btn' href='register.php'>Back to Register Form</a>
+                </div>
+            </div>
+        </div>
+     </body>
+     </html>";
 }
 
 $stmt->close();

@@ -77,23 +77,45 @@ $stmt->bind_param("sssssss", $firstName, $lastName, $email, $phone, $membershipT
 
 // Run query and display result
 if ($stmt->execute()) {
-    echo "<!DOCTYPE html><html><head><title>Success - Membership Registration</title>";
-    echo "<link rel='stylesheet' href='styles.css'>";
-    echo "</head><body>";
-    echo "<h2 class='successful'>✅ Membership Registration Successful!</h2>";
-    echo "<p>Welcome, <b>" . htmlspecialchars($firstName) . " " . htmlspecialchars($lastName) . "</b>!</p>";
-    echo "<p>Your <b>" . htmlspecialchars($membershipType) . "</b> membership has been registered successfully.</p>";
-    echo "<p>Start Date: <b>" . htmlspecialchars($startDate) . "</b></p>";
-    echo "<a href='membership.php'>⬅ Back to Membership Form</a>";
-    echo "</body></html>";
+    echo "<!DOCTYPE html><html><head><title>Success - Membership Registration</title>
+     <link rel='stylesheet' href='styles.css'>
+     </head>
+     <body>
+        <div class = 'modal-overlay'>
+            <div class ='modal-card'>
+                <div class = 'card-header header-success'>
+                    <h3>Membership Registration</h3>
+                </div>
+                <div class ='card-body success-message'>
+                    <h2>✅ Membership Registration Successful!</h2>
+                    <p>Welcome, <b>" . htmlspecialchars($firstName) . " " . htmlspecialchars($lastName) . "</b>!</p>
+                    <p>Your <b>" . htmlspecialchars($membershipType) . "</b> membership has been registered successfully.</p>
+                    <p>Start Date: <b>" . htmlspecialchars($startDate) . "</b></p>
+                    <a class = 'back-btn' href='membership.php'>Back to Membership Registration</a>
+                </div>
+            </div>
+        </div>
+     </body>
+     </html>";
 } else {
-    echo "<!DOCTYPE html><html><head><title>Error - Membership Registration</title>";
-    echo "<link rel='stylesheet' href='styles.css'>";
-    echo "</head><body>";
-    echo "<h2 class='error'>❌ Database Error:</h2>";
-    echo "<p>" . htmlspecialchars($conn->error) . "</p>";
-    echo "<a href='membership.php'>⬅ Back to Membership Form</a>";
-    echo "</body></html>";
+    echo "<!DOCTYPE html><html><head><title>Error - Membership Registration</title>
+     <link rel='stylesheet' href='styles.css'>
+     </head
+     <body>
+        <div class = 'modal-overlay'>
+            <div class ='modal-card'>
+                <div class = 'card-header header-error'>
+                    <h3>⚠️ Registration Failed</h3>
+                </div>
+                <div class='card-body error-message'>
+                    <h2 class='error'>❌ Database Error:</h2>
+                    <p>" . htmlspecialchars($conn->error) . "</p>
+                    <a class = 'back-btn error-btn' href='membership.php'>Back to Registration Form</a>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>";
 }
 
 $stmt->close();

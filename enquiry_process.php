@@ -83,22 +83,43 @@ $stmt->bind_param("ssssss", $firstName, $lastName, $email, $phone, $enquiryType,
 
 // Run query and display result
 if ($stmt->execute()) {
-    echo "<!DOCTYPE html><html><head><title>Success - Enquiry Form</title>";
-    echo "<link rel='stylesheet' href='styles.css'>";
-    echo "</head><body>";
-    echo "<h2 class='successful'>✅ Enquiry Submitted Successfully!</h2>";
-    echo "<p>Thank you, <b>" . htmlspecialchars($firstName) . " " . htmlspecialchars($lastName) . "</b>!</p>";
-    echo "<p>We have received your enquiry and will get back to you soon.</p>";
-    echo "<a href='enquiry.php'>⬅ Back to Enquiry Form</a>";
-    echo "</body></html>";
+    echo "<!DOCTYPE html><html><head><title>Success - Enquiry Form</title>
+     <link rel='stylesheet' href='styles.css'>
+     </head>
+     <body>
+        <div class = 'modal-overlay'>
+            <div class ='modal-card'>
+                <div class = 'card-header header-success'>
+                    <h3>Enquiry Form</h3>
+                </div>
+                <div class ='card-body success-message'>
+                    <h2>✅ Enquiry Submitted Successfully!</h2>
+                    <p>Thank you, <b>" . htmlspecialchars($firstName) . " " . htmlspecialchars($lastName) . "</b>!</p>
+                    <p>We have received your enquiry and will get back to you soon.</p>
+                    <a class = 'back-btn' href='enquiry.php'>Back to Enquiry Form</a>
+                </div>
+            </div>
+        </div>
+     </body>
+     </html>";
 } else {
-    echo "<!DOCTYPE html><html><head><title>Error - Enquiry Form</title>";
-    echo "<link rel='stylesheet' href='styles.css'>";
-    echo "</head><body>";
-    echo "<h2 class='error'>❌ Database Error:</h2>";
-    echo "<p>" . htmlspecialchars($conn->error) . "</p>";
-    echo "<a href='enquiry.php'>⬅ Back to Enquiry Form</a>";
-    echo "</body></html>";
+    echo "<!DOCTYPE html><html><head><title>Error - Enquiry Form</title>
+     <link rel='stylesheet' href='styles.css'>
+     </head>
+     <body>
+        <div class = 'modal-overlay'>
+            <div class ='modal-card'>
+                <h3>⚠️ Enquiry Failed</h3>
+            </div>
+            <div class='card-body error-message'>
+                <h2>❌ Database Error:</h2>
+                <p>" . htmlspecialchars($conn->error) . "</p>
+                <a class = 'back-btn error-btn' href='enquiry.php'>Back to Enquiry Form</a>
+            </div>
+        </div>
+    </div>
+    </body>
+    </html>";
 }
 
 $stmt->close();
