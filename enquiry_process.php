@@ -1,57 +1,107 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Root Flower | Inquiry Form</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-</head>
-<body class="inquiry-page">
- <?php include("navigation.php"); ?>
+<?php
+// enquiry_process.php
+// Process enquiry form submissions
 
-  <!-- Main Content -->
-  <main>
-    <section class="inquiry-section">
-      <h2>Inquiry Form</h2>
-      <p>Have a question or need assistance? Fill out the form below and we’ll get back to you soon 💐</p>
+require_once 'db_connection.php';
 
-      <form action="#" method="post">
-        <label for="firstName">First Name *</label>
-        <input type="text" id="firstName" name="firstName" maxlength="25" pattern="[A-Za-z\s]+" required placeholder="Enter your first name">
+// Get form data safely
+$firstName = trim($_POST['firstName'] ?? '');
+$lastName = trim($_POST['lastName'] ?? '');
+$email = trim($_POST['email'] ?? '');
+$phone = trim($_POST['phone'] ?? '');
+$enquiry = trim($_POST['enquiry'] ?? '');
+$comments = trim($_POST['comments'] ?? '');
 
-        <label for="lastName">Last Name *</label>
-        <input type="text" id="lastName" name="lastName" maxlength="25" pattern="[A-Za-z\s]+" required placeholder="Enter your last name">
+// Validate inputs
+$errors = [];
 
-        <label for="email">Email Address *</label>
-        <input type="email" id="email" name="email" required placeholder="example@gmail.com">
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (empty($firstName)) {
+        $errors[] = "First Name is required.";
+    } elseif (!preg_match("/^[A-Za-z' ]+$/", $firstName)) {
+        $errors[] = "First Name must contain only letters and spacing only.";
+    }
 
-        <label for="phone">Phone Number *</label>
-        <input type="tel" id="phone" name="phone" maxlength="10" pattern="[0-9]{10}" required placeholder="0123456789">
+    if (empty($lastName)) {
+        $errors[] = "Last Name is required.";
+    } elseif (!preg_match("/^[A-Za-z' ]+$/", $lastName)) {
+        $errors[] = "Last Name must contain only letters and spacing only.";
+    }
 
-        <label for="enquiry">Enquiry Type *</label>
-        <select id="enquiry" name="enquiry" required>
-          <option value="">-- Please select --</option>
-          <option value="products">Products</option>
-          <option value="membership">Membership</option>
-          <option value="workshop">Workshop</option>
-          <option value="others">Others</option>
-        </select>
+    if (empty($email)) {
+        $errors[] = "Email Address is required.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors[] = "Invalid Email format.";
+    }
 
-        <label for="comments">Comments *</label>
-        <textarea id="comments" name="comments" rows="5" required placeholder="Write your message here..."></textarea>
+    if (empty($phone)) {
+        $errors[] = "Phone Number is required.";
+    } elseif (!preg_match("/^[0-9]{10}$/", $phone)) {
+        $errors[] = "Phone Number must be exactly 10 digits.";
+    }
 
-      <div class="form-actions">
-        <button type="submit">
-        <i class="fa-solid fa-paper-plane"></i> Submit
-        </button>
-        <button type="reset">
-        <i class="fa-solid fa-rotate-left"></i> Reset
-        </button>
-      </div>
-      
-      </form>
-    </section>
-  </main>
+    if (empty($enquiry)) {
+        $errors[] = "Enquiry Type is required.";
+    }
 
-<?php include("footer.php"); ?>
+    if (empty($comments)) {
+        $errors[] = "Comments are required.";
+    }
+}
+
+// Show validation errors if any
+if (!empty($errors)) {
+    echo "<!DOCTYPE html><html><head><title>Error - Enquiry Form</title>";
+    echo "<link rel='stylesheet' href='styles.css'>";
+    echo "</head><body>";
+    echo "<h2 class='error'>⚠️ Submission Failed</h2>";
+    echo "<ul>";
+    foreach ($errors as $error) {
+        echo "<li class='error'>$error</li>";
+    }
+    echo "</ul>";
+    echo "<p><a href='enquiry.php'>⬅ Go Back to Enquiry Form</a></p>";
+    echo "</body></html>";
+    exit;
+}
+
+// Map form values to database ENUM values (capitalize first letter)
+$enquiryTypeMap = [
+    'products' => 'Products',
+    'membership' => 'Membership',
+    'workshop' => 'Workshop',
+    'others' => 'Others'
+];
+$enquiryType = $enquiryTypeMap[$enquiry] ?? 'Others';
+
+// Insert into database
+$sql = "INSERT INTO enquiry (first_name, last_name, email, phone_number, enquiry_type, comments)
+        VALUES (?, ?, ?, ?, ?, ?)";
+
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("ssssss", $firstName, $lastName, $email, $phone, $enquiryType, $comments);
+
+// Run query and display result
+if ($stmt->execute()) {
+    echo "<!DOCTYPE html><html><head><title>Success - Enquiry Form</title>";
+    echo "<link rel='stylesheet' href='styles.css'>";
+    echo "</head><body>";
+    echo "<h2 class='successful'>✅ Enquiry Submitted Successfully!</h2>";
+    echo "<p>Thank you, <b>" . htmlspecialchars($firstName) . " " . htmlspecialchars($lastName) . "</b>!</p>";
+    echo "<p>We have received your enquiry and will get back to you soon.</p>";
+    echo "<a href='enquiry.php'>⬅ Back to Enquiry Form</a>";
+    echo "</body></html>";
+} else {
+    echo "<!DOCTYPE html><html><head><title>Error - Enquiry Form</title>";
+    echo "<link rel='stylesheet' href='styles.css'>";
+    echo "</head><body>";
+    echo "<h2 class='error'>❌ Database Error:</h2>";
+    echo "<p>" . htmlspecialchars($conn->error) . "</p>";
+    echo "<a href='enquiry.php'>⬅ Back to Enquiry Form</a>";
+    echo "</body></html>";
+}
+
+$stmt->close();
+$conn->close();
+?>
+

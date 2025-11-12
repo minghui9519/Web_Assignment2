@@ -1,49 +1,101 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Root Flower | Membership Registration</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-</head>
-<body class="membership-page">
+<?php
+// membership_process.php
+// Process membership form submissions
 
- <?php include("navigation.php"); ?>
+require_once 'db_connection.php';
 
-  <!-- Main Content -->
-  <main>
-    <section class="registration-section">
-      <h2>Membership Registration</h2>
-      <p>Join Root Flower’s community for exclusive offers, member-only discounts, and early access to workshops 🌸</p>
+// Get form data safely
+$firstName = trim($_POST['firstName'] ?? '');
+$lastName = trim($_POST['lastName'] ?? '');
+$email = trim($_POST['email'] ?? '');
+$phone = trim($_POST['phone'] ?? '');
+$membershipType = trim($_POST['membershipType'] ?? '');
+$startDate = trim($_POST['startDate'] ?? '');
+$comments = trim($_POST['comments'] ?? '');
 
-      <form action="#" method="post">
-        <label for="firstName">First Name *</label>
-        <input type="text" id="firstName" name="firstName" maxlength="25" pattern="[A-Za-z\s]+" required placeholder="Enter your first name">
+// Validate inputs
+$errors = [];
 
-        <label for="lastName">Last Name *</label>
-        <input type="text" id="lastName" name="lastName" maxlength="25" pattern="[A-Za-z\s]+" required placeholder="Enter your last name">
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (empty($firstName)) {
+        $errors[] = "First Name is required.";
+    } elseif (!preg_match("/^[A-Za-z' ]+$/", $firstName)) {
+        $errors[] = "First Name must contain only letters and spacing only.";
+    }
 
-        <label for="email">Email Address *</label>
-        <input type="email" id="email" name="email" required placeholder="example@gmail.com">
+    if (empty($lastName)) {
+        $errors[] = "Last Name is required.";
+    } elseif (!preg_match("/^[A-Za-z' ]+$/", $lastName)) {
+        $errors[] = "Last Name must contain only letters and spacing only.";
+    }
 
-        <label for="loginID">Login ID *</label>
-        <input type="text" id="loginID" name="loginID" maxlength="10" pattern="[A-Za-z]+" required placeholder="Choose a login ID">
+    if (empty($email)) {
+        $errors[] = "Email Address is required.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors[] = "Invalid Email format.";
+    }
 
-        <label for="password">Password *</label>
-        <input type="password" id="password" name="password" maxlength="25" required placeholder="Enter a password">
+    if (empty($phone)) {
+        $errors[] = "Phone Number is required.";
+    } elseif (!preg_match("/^[0-9]{10}$/", $phone)) {
+        $errors[] = "Phone Number must be exactly 10 digits.";
+    }
 
-      <div class="form-actions">
-        <button type="submit">
-        <i class="fa-solid fa-paper-plane"></i> Submit
-        </button>
-        <button type="reset">
-        <i class="fa-solid fa-rotate-left"></i> Reset
-        </button>
-      </div>
-      
-      </form>
-    </section>
-  </main>
+    if (empty($membershipType)) {
+        $errors[] = "Membership Type is required.";
+    } elseif (!in_array($membershipType, ['Basic', 'Premium', 'VIP'])) {
+        $errors[] = "Invalid Membership Type.";
+    }
 
-<?php include("footer.php"); ?>
+    if (empty($startDate)) {
+        $errors[] = "Start Date is required.";
+    }
+}
+
+// Show validation errors if any
+if (!empty($errors)) {
+    echo "<!DOCTYPE html><html><head><title>Error - Membership Registration</title>";
+    echo "<link rel='stylesheet' href='styles.css'>";
+    echo "</head><body>";
+    echo "<h2 class='error'>⚠️ Registration Failed</h2>";
+    echo "<ul>";
+    foreach ($errors as $error) {
+        echo "<li class='error'>$error</li>";
+    }
+    echo "</ul>";
+    echo "<p><a href='membership.php'>⬅ Go Back to Registration Form</a></p>";
+    echo "</body></html>";
+    exit;
+}
+
+// Insert into database
+$sql = "INSERT INTO membership (first_name, last_name, email, phone_number, membership_type, start_date, comments)
+        VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("sssssss", $firstName, $lastName, $email, $phone, $membershipType, $startDate, $comments);
+
+// Run query and display result
+if ($stmt->execute()) {
+    echo "<!DOCTYPE html><html><head><title>Success - Membership Registration</title>";
+    echo "<link rel='stylesheet' href='styles.css'>";
+    echo "</head><body>";
+    echo "<h2 class='successful'>✅ Membership Registration Successful!</h2>";
+    echo "<p>Welcome, <b>" . htmlspecialchars($firstName) . " " . htmlspecialchars($lastName) . "</b>!</p>";
+    echo "<p>Your <b>" . htmlspecialchars($membershipType) . "</b> membership has been registered successfully.</p>";
+    echo "<p>Start Date: <b>" . htmlspecialchars($startDate) . "</b></p>";
+    echo "<a href='membership.php'>⬅ Back to Membership Form</a>";
+    echo "</body></html>";
+} else {
+    echo "<!DOCTYPE html><html><head><title>Error - Membership Registration</title>";
+    echo "<link rel='stylesheet' href='styles.css'>";
+    echo "</head><body>";
+    echo "<h2 class='error'>❌ Database Error:</h2>";
+    echo "<p>" . htmlspecialchars($conn->error) . "</p>";
+    echo "<a href='membership.php'>⬅ Back to Membership Form</a>";
+    echo "</body></html>";
+}
+
+$stmt->close();
+$conn->close();
+?>

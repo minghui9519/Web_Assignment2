@@ -1,55 +1,104 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Workshop Registration - Root Flower</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-</head>
-<body class="workshop-page">
-    
- <?php include("navigation.php"); ?>
-    <!-- Main Content -->
-    <main>
-        <section class="registration-section">
-            <h2>Workshop Registration</h2>
-            <p>Please fill in the form below to register for our workshop in Kuching 🌸</p>
+<?php
+// register_process.php
+// Process workshop registration form submissions
 
-            <form action="#" method="post">
-                <label for="name">Full Name*</label>
-                <input type="text" id="name" name="name" required placeholder="Enter your full name">
+require_once 'db_connection.php';
 
-                <label for="email">Email Address*</label>
-                <input type="email" id="email" name="email" required placeholder="example@email.com">
+// Get form data safely
+$name = trim($_POST['name'] ?? '');
+$email = trim($_POST['email'] ?? '');
+$phone = trim($_POST['phone'] ?? '');
+$workshop = trim($_POST['workshop'] ?? '');
+$date = trim($_POST['date'] ?? '');
+$comments = trim($_POST['comments'] ?? '');
 
-                <label for="phone">Phone Number*</label>
-                <input type="tel" id="phone" name="phone" required pattern="[0-9]{10,11}" placeholder="e.g. 0143399709">
+// Validate inputs
+$errors = [];
 
-                <label for="workshop">Select Workshop*</label>
-                <select id="workshop" name="workshop" required>
-                    <option value="">-- Please select --</option>
-                    <option value="handtied">Handtied Bouquet (2 days / 5 classes)</option>
-                    <option value="florist">Florist To Be (4 days / 9 classes)</option>
-                    <option value="hobby">Hobby Class (Specific Dates)</option>
-                </select>
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (empty($name)) {
+        $errors[] = "Full Name is required.";
+    } elseif (!preg_match("/^[A-Za-z' ]+$/", $name)) {
+        $errors[] = "Full Name must contain only letters and spacing only.";
+    }
 
-                <label for="date">Preferred Workshop Date*</label>
-                <input type="date" id="date" name="date" required>
+    if (empty($email)) {
+        $errors[] = "Email Address is required.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors[] = "Invalid Email format.";
+    }
 
-                <label for="comments">Additional Notes</label>
-                <textarea id="comments" name="comments" rows="4" placeholder="Any requests or notes (optional)"></textarea>
+    if (empty($phone)) {
+        $errors[] = "Phone Number is required.";
+    } elseif (!preg_match("/^[0-9]{10,11}$/", $phone)) {
+        $errors[] = "Phone Number must be 10 or 11 digits.";
+    }
 
-            <div class="form-actions">
-                <button type="submit">
-                <i class="fa-solid fa-paper-plane"></i> Submit
-                </button>
-                <button type="reset">
-                <i class="fa-solid fa-rotate-left"></i> Reset
-                  </button>
-            </div>
-            </form>
-        </section>
-    </main>
+    if (empty($workshop)) {
+        $errors[] = "Workshop selection is required.";
+    }
 
-<?php include("footer.php"); ?>
+    if (empty($date)) {
+        $errors[] = "Preferred Date is required.";
+    }
+}
+
+// Show validation errors if any
+if (!empty($errors)) {
+    echo "<!DOCTYPE html><html><head><title>Error - Workshop Registration</title>";
+    echo "<link rel='stylesheet' href='styles.css'>";
+    echo "</head><body>";
+    echo "<h2 class='error'>⚠️ Registration Failed</h2>";
+    echo "<ul>";
+    foreach ($errors as $error) {
+        echo "<li class='error'>$error</li>";
+    }
+    echo "</ul>";
+    echo "<p><a href='register.php'>⬅ Go Back to Registration Form</a></p>";
+    echo "</body></html>";
+    exit;
+}
+
+// Map workshop values to full names
+$workshopNameMap = [
+    'handtied' => 'Handtied Bouquet (2 days / 5 classes)',
+    'florist' => 'Florist To Be (4 days / 9 classes)',
+    'hobby' => 'Hobby Class (Specific Dates)'
+];
+$workshopName = $workshopNameMap[$workshop] ?? $workshop;
+
+// Ensure phone is exactly 10 characters for database
+$phone = substr($phone, 0, 10);
+
+// Insert into database
+$sql = "INSERT INTO register (full_name, email, phone_number, workshop_name, preferred_date, notes)
+        VALUES (?, ?, ?, ?, ?, ?)";
+
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("ssssss", $name, $email, $phone, $workshopName, $date, $comments);
+
+// Run query and display result
+if ($stmt->execute()) {
+    echo "<!DOCTYPE html><html><head><title>Success - Workshop Registration</title>";
+    echo "<link rel='stylesheet' href='styles.css'>";
+    echo "</head><body>";
+    echo "<h2 class='successful'>✅ Workshop Registration Successful!</h2>";
+    echo "<p>Thank you, <b>" . htmlspecialchars($name) . "</b>!</p>";
+    echo "<p>Your registration for <b>" . htmlspecialchars($workshopName) . "</b> has been received.</p>";
+    echo "<p>We will contact you soon to confirm your registration.</p>";
+    echo "<a href='register.php'>⬅ Back to Registration Form</a>";
+    echo "</body></html>";
+} else {
+    echo "<!DOCTYPE html><html><head><title>Error - Workshop Registration</title>";
+    echo "<link rel='stylesheet' href='styles.css'>";
+    echo "</head><body>";
+    echo "<h2 class='error'>❌ Database Error:</h2>";
+    echo "<p>" . htmlspecialchars($conn->error) . "</p>";
+    echo "<a href='register.php'>⬅ Back to Registration Form</a>";
+    echo "</body></html>";
+}
+
+$stmt->close();
+$conn->close();
+?>
+
