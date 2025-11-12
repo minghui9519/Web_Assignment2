@@ -56,6 +56,7 @@ if ($conn->query($sql) === TRUE) {
 } else {
   echo "Error creating 'membership' table: " . $conn->error . "<br>";
 }
+
 // create register table
 $sql = "CREATE TABLE IF NOT EXISTS register (
   register_id INT AUTO_INCREMENT PRIMARY KEY,
