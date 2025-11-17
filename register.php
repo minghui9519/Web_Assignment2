@@ -16,7 +16,7 @@
             <h2>Workshop Registration</h2>
             <p>Please fill in the form below to register for our workshop in Kuching 🌸</p>
 
-            <form action="register_process.php" method="post">
+            <form action="register_process.php" method="post" novalidate>
                 <label for="name">Full Name*</label>
                 <input type="text" id="name" name="name" required placeholder="Enter your full name">
 
@@ -24,7 +24,7 @@
                 <input type="email" id="email" name="email" required placeholder="example@email.com">
 
                 <label for="phone">Phone Number*</label>
-                <input type="tel" id="phone" name="phone" required pattern="[0-9]{10,11}" placeholder="e.g. 0143399709">
+                <input type="tel" id="phone" name="phone" required placeholder="e.g. 0143399709">
 
                 <label for="workshop">Select Workshop*</label>
                 <select id="workshop" name="workshop" required>

@@ -54,30 +54,52 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 // Show validation errors if any
 if (!empty($errors)) {
-    echo "<!DOCTYPE html><html><head><title>Error - Membership Registration</title>";
-    echo "<link rel='stylesheet' href='styles.css'>";
-    echo "</head><body>";
-    echo "<h2 class='error'>⚠️ Registration Failed</h2>";
-    echo "<ul>";
+    echo "<!DOCTYPE html>
+    <html>
+    <head>
+        <title>Error - Membership Registration</title>
+        <link rel='stylesheet' href='styles.css'>
+    </head>
+    <body>
+        <div class='modal-wrapper'>
+            <div class='modal-container'>
+                <div class='modal-header header-error'>
+                    <h3>⚠️ Registration Failed</h3>
+                </div>
+                <div class='card-body error-message'>
+                    <h2 class='error'>Submission Failed</h2>
+                    <ul>";
+    
     foreach ($errors as $error) {
-        echo "<li class='error'>$error</li>";
+        echo "<li class='error-item'>" . htmlspecialchars($error) . "</li>";
     }
-    echo "</ul>";
-    echo "<p><a href='membership.php'>⬅ Go Back to Registration Form</a></p>";
-    echo "</body></html>";
+
+    echo "</ul>
+                    <a class='back-btn error-btn' href='membership.php'>Back to Membership Form</a>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>";
     exit;
 }
+
 
 // Insert into database
 $sql = "INSERT INTO membership (first_name, last_name, email, phone_number, membership_type, start_date, comments)
         VALUES (?, ?, ?, ?, ?, ?, ?)";
 
 $stmt = $conn->prepare($sql);
+if (!$stmt) {
+    die("Database prepare error: " . htmlspecialchars($conn->error));
+}
 $stmt->bind_param("sssssss", $firstName, $lastName, $email, $phone, $membershipType, $startDate, $comments);
 
 // Run query and display result
 if ($stmt->execute()) {
-    echo "<!DOCTYPE html><html><head><title>Success - Membership Registration</title>
+    echo "<!DOCTYPE html><html>
+    <head>
+     <title>Success - Membership Registration</title>
      <link rel='stylesheet' href='styles.css'>
      </head>
      <body>

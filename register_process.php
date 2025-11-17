@@ -45,19 +45,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 // Show validation errors if any
 if (!empty($errors)) {
-    echo "<!DOCTYPE html><html><head><title>Error - Workshop Registration</title>";
-    echo "<link rel='stylesheet' href='styles.css'>";
-    echo "</head><body>";
-    echo "<h2 class='error'>⚠️ Registration Failed</h2>";
-    echo "<ul>";
+    echo "<!DOCTYPE html>
+    <html>
+    <head>
+        <title>Error - Workshop Registration</title>
+        <link rel='stylesheet' href='styles.css'>
+    </head>
+    <body>
+        <div class='register-wrap' data-cy='register-error'>
+            <div class='register-container'>
+                <div class='register error'>
+                    <h3>⚠️ Registration Failed</h3>
+                </div>
+                <div class='register-error-message'>
+                    <h2 class='error'>Submission Failed</h2>
+                    <ul>";
+    
     foreach ($errors as $error) {
-        echo "<li class='error'>$error</li>";
+        echo "<li class='error-item'>" . htmlspecialchars($error) . "</li>";
     }
-    echo "</ul>";
-    echo "<p><a href='register.php'>⬅ Go Back to Registration Form</a></p>";
-    echo "</body></html>";
+
+    echo "</ul>
+                    <a class='back-btn error-btn' href='register.php'>Back to Registration Form</a>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>";
     exit;
 }
+
 
 // Map workshop values to full names
 $workshopNameMap = [
@@ -67,15 +84,24 @@ $workshopNameMap = [
 ];
 $workshopName = $workshopNameMap[$workshop] ?? $workshop;
 
-// Ensure phone is exactly 10 characters for database
-$phone = substr($phone, 0, 10);
-
 // Insert into database
 $sql = "INSERT INTO register (full_name, email, phone_number, workshop_name, preferred_date, notes)
         VALUES (?, ?, ?, ?, ?, ?)";
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ssssss", $name, $email, $phone, $workshopName, $date, $comments);
+if (!$stmt) {
+    die("Database prepare failed: " . htmlspecialchars($conn->error));
+}
+
+$stmt->bind_param(
+    "ssssss",
+    $name,
+    $email,
+    $phone,
+    $workshopName,
+    $date,
+    $comments
+);
 
 // Run query and display result
 if ($stmt->execute()) {
@@ -83,7 +109,7 @@ if ($stmt->execute()) {
      <link rel='stylesheet' href='styles.css'>
      </head>
      <body>
-        <div class = 'modal-overlay'>
+        <div class = 'modal-overlay' data-cy='register-success'>
             <div class ='modal-card'>
                 <div class = 'card-header header-success'>
                     <h3>Workshop Registration</h3>
@@ -104,7 +130,7 @@ if ($stmt->execute()) {
      <link rel='stylesheet' href='styles.css'>
      </head>
      <body>
-        <div class = 'modal-overlay'>
+        <div class = 'modal-overlay' data-cy='register-db-error'>
             <div class ='modal-card'>
                 <div class = 'card-header header-error'>
                     <h3>⚠️Registration Failed</h3>

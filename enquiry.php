@@ -10,24 +10,25 @@
 <body class="inquiry-page">
  <?php include("navigation.php"); ?>
 
+
   <!-- Main Content -->
   <main>
     <section class="inquiry-section">
       <h2>Inquiry Form</h2>
       <p>Have a question or need assistance? Fill out the form below and we’ll get back to you soon 💐</p>
 
-      <form action="enquiry_process.php" method="post">
+      <form action="enquiry_process.php" method="post" novalidate>
         <label for="firstName">First Name *</label>
-        <input type="text" id="firstName" name="firstName" maxlength="25" pattern="[A-Za-z\s]+" required placeholder="Enter your first name">
+        <input type="text" id="firstName" name="firstName" maxlength="25" placeholder="Enter your first name">
 
         <label for="lastName">Last Name *</label>
-        <input type="text" id="lastName" name="lastName" maxlength="25" pattern="[A-Za-z\s]+" required placeholder="Enter your last name">
+        <input type="text" id="lastName" name="lastName" maxlength="25"  placeholder="Enter your last name">
 
         <label for="email">Email Address *</label>
-        <input type="email" id="email" name="email" required placeholder="example@gmail.com">
+        <input type="text" id="email" name="email"  placeholder="example@gmail.com">
 
         <label for="phone">Phone Number *</label>
-        <input type="tel" id="phone" name="phone" maxlength="10" pattern="[0-9]{10}" required placeholder="0123456789">
+        <input type="text" id="phone" name="phone" maxlength="10"  placeholder="0123456789">
 
         <label for="enquiry">Enquiry Type *</label>
         <select id="enquiry" name="enquiry" required>

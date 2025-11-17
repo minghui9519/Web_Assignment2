@@ -4,6 +4,8 @@
 
 require_once 'db_connection.php';
 
+
+
 // Get form data safely
 $firstName = trim($_POST['firstName'] ?? '');
 $lastName = trim($_POST['lastName'] ?? '');
@@ -51,19 +53,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 // Show validation errors if any
 if (!empty($errors)) {
-    echo "<!DOCTYPE html><html><head><title>Error - Enquiry Form</title>";
-    echo "<link rel='stylesheet' href='styles.css'>";
-    echo "</head><body>";
-    echo "<h2 class='error'>⚠️ Submission Failed</h2>";
-    echo "<ul>";
+    echo "<!DOCTYPE html>
+    <html>
+    <head>
+        <title>Error - Enquiry Form</title>
+        <link rel='stylesheet' href='styles.css'>
+    </head>
+    <body>
+        <div class='modal-wrapper-register'>
+            <div class='modal-container-register'>
+                <div class='modal-header header-error-register'>
+                    <h3>⚠️ Enquiry Failed</h3>
+                </div>
+                <div class='card-body error-message-register'>
+                    <h2 class='error'>Submission Failed</h2>
+                    <ul>";
+    
     foreach ($errors as $error) {
-        echo "<li class='error'>$error</li>";
+        echo "<li class='error-item' data-cy='enquiry-error'>" . htmlspecialchars($error) . "</li>";
     }
-    echo "</ul>";
-    echo "<p><a href='enquiry.php'>⬅ Go Back to Enquiry Form</a></p>";
-    echo "</body></html>";
+
+    echo "</ul>
+                    <a class='back-btn error-btn' href='enquiry.php'>Back to Enquiry Form</a>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>";
     exit;
 }
+
+
 
 // Map form values to database ENUM values (capitalize first letter)
 $enquiryTypeMap = [

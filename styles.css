@@ -2875,147 +2875,282 @@ form .form-actions button[type="reset"]:hover {
 }
 
 /*process page*/
-/* Centered overlay*/
-.modal-overlay{
+/* Modal Overlay */
+.modal-overlay, .modal-wrapper {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background:rgba(246, 225, 255, 0.85);
+    background: rgba(246, 225, 255, 0.85); /* overlay color */
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     z-index: 999;
     padding: 10px;
 }
 
-/*card container*/
-.modal-card{
-    background: #ffffff;
+/* Card Container*/
+.modal-card, .modal-container {
+    background: #fff;
     border-radius: 15px;
     width: 100%;
     max-width: 600px;
     text-align: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    animation: fadeIn 0.3s ease-out;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     overflow: hidden;
-    box-sizing: border-box; /*prevent padding from expanding width*/
+    box-sizing: border-box;
+    animation: fadeIn 0.3s ease-out;
     color: #333;
-    
 }
 
-/*card-header*/
-.card-header{
-    text-align: center;
-    padding: 10px;
-    color:#fff;
-    font-size: 18px;
+/* Card Header*/
+.card-header, .modal-header {
+    padding: 15px 20px;
+    font-size: 1.2rem;
     font-weight: bold;
     letter-spacing: 0.5px;
+    text-align: center;
+    color: #fff;
 }
-/*header colors*/
-.header-success{
+
+.header-success {
     background-color: #4caf50;
 }
 
-.header-error{
-    background-color: #f44336;
+.header-error {
+    background-color: #e74c3c;
 }
 
-/*card body*/
-.card-body{
+/*  Card Body*/
+.card-body {
     padding: 20px 25px;
     text-align: center;
 }
 
-/*success content*/
-.success-message{
+/* Success Message*/
+.success-message {
     font-size: 18px;
+    margin-bottom: 20px;
+    color: #2e7d32;
+}
+
+.success-message h2 {
     margin-bottom: 10px;
     color: #2e7d32;
 }
 
-.success-message h2{
-    color: #2e7d32;
-    padding-bottom: 10px;
-}
-
-.success-message p{
+.success-message p {
     color: #333;
     line-height: 1.5;
 }
 
-
-
-/*Error contents*/
-.error-message h2{
+/*    Error Message*/
+.error-message h2 {
     color: #c62828;
+    margin-bottom: 15px;
 }
 
-.error-message p{
+.error-message p {
     color: #333;
     line-height: 1.5;
+    margin-bottom: 10px;
 }
 
-/*button*/
-.back-btn{
-    display: inline-block;
-    margin: 30px 0 5px 0;
-    padding: 15px 20px;
+/* Error List */
+.error-message ul {
+    padding-left: 20px;
+    margin-bottom: 20px;
+    text-align: left;      /* bullet points left-aligned */
+    display: inline-block; /* centers the block horizontally in modal */
+}
+
+.error-item {
+    color: #000000;
+    margin-bottom: 5px;
+    font-weight: normal;
+}
+
+/* Buttons*/
+.back-btn, .error-btn {
+    display: block;          /* block so it goes below message */
+    width: 50%;              /* half width */
+    max-width: 250px;        /* optional max width */
+    margin: 0 auto;          /* center button */
+    padding: 12px 20px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.3s,transform 0.2s ease;
+}
+
+.back-btn {
     background-color: #4caf50;
     color: #fff;
-    text-decoration: none;
-    border-radius: 8px;
-    transition: background 0.3s;
-    font-weight: bold;
+    margin-top: 10px;
 }
 
-.back-btn:hover{
+.back-btn:hover {
     background-color: #33a439;
+    transform: scale(1.05);
 }
 
-/*red variant for error button*/
-.error-btn{
-    background-color: #f44336;
+.error-btn {
+    background-color: #e74c3c;
     color: #fff;
-    margin: 25px 0 20px 0;
+    margin-top: 10px;
 }
 
-.error-btn:hover{
-    background-color: #d32f3f;
+.error-btn:hover {
+    background-color: #cd4536eb;
+    transform: scale(1.05);
 }
 
-/*smooth animation */
-@keyframes fadeIn{
-    from {transform: scale(0.9);opacity:0;}
-    to {transform: scale(1); opacity:1;}
+/* Animation*/
+@keyframes fadeIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
 }
 
-/* mobile adjustment*/
+/*  Mobile Adjustments*/
 @media screen and (max-width: 480px) {
-    .modal-card {
-        width: 100%;       /* full width */
-        max-width: 90%;    /* small margin on sides */
+    .modal-card, .modal-container {
+        width: 90%;
         padding: 12px;
     }
 
     .success-message h2,
     .error-message h2 {
-        font-size: 20px;   /* slightly smaller headers on mobile */
+        font-size: 20px;
     }
 
     .success-message p,
     .error-message p {
-        font-size: 16px;   /* readable on small screens */
+        font-size: 16px;
     }
 
     .back-btn, .error-btn {
-        width: 100%;       /* buttons stretch full width */
+        width: 100%;  /* full width on mobile */
         padding: 12px 0;
         font-size: 16px;
     }
+
+    .error-message ul {
+        padding-left: 15px; /* smaller indent for small screens */
+    }
 }
+
+/* Overlay / Wrapper */
+.register-wrap {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(246, 225, 255, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    padding: 10px;
+}
+
+/* Card Container */
+.register-container {
+    background: #fff;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    overflow: hidden;
+    box-sizing: border-box;
+    animation: fadeIn 0.3s ease-out;
+    color: #333;
+}
+
+/* Card Header (Error) */
+.register.error {
+    padding: 15px 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    text-align: center;
+    color: #fff;
+    background-color: #e74c3c; /* same as .header-error */
+}
+
+/* Error Message Body */
+.register-error-message {
+    padding: 20px 25px;
+    text-align: center;
+}
+
+.error{
+    color: #c62828;
+}
+
+/* Error List Items */
+.register-error-message ul {
+    padding-left: 20px;
+    margin-bottom: 20px;
+    text-align: left;
+    display: inline-block;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.header-error-register {
+    background-color: #e74c3c;
+    padding: 15px 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    text-align: center;
+    color: #fff;
+}
+
+.modal-container-register {
+    background: #fff;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    overflow: hidden;
+    box-sizing: border-box;
+    animation: fadeIn 0.3s ease-out;
+    color: #333;
+}
+
+.modal-wrapper-register {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(246, 225, 255, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    padding: 10px;
+}
+
+.error-message-register ul {
+    padding-left: 20px;
+    margin-bottom: 20px;
+    text-align: left;
+    display: inline-block;
+}
+
+
 
 
 
