@@ -2,7 +2,74 @@
 // membership_process.php
 // Process membership form submissions
 
+session_start();
 require_once 'db_connection.php';
+
+//ANTI-SPAM PROTECTION
+$limit = 3;            // max submissions allowed
+$time_window = 180;    // 180 seconds
+$block_time = 300;     // 5 minutes block
+
+// If user is still blocked
+if (isset($_SESSION['membership_blocked_until']) && time() < $_SESSION['membership_blocked_until']) {
+    die("
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Blocked - Too Many Attempts</title>
+        <link rel='stylesheet' href='styles.css'>
+    </head>
+    <body>
+        <div class='spam-block-container'>
+            <div class='spam-block-box'>
+                <h2 class='spam-title'>⚠️ Temporarily Blocked</h2>
+                <p>You submitted too many membership requests in a short time.</p>
+                <p>Please try again later.</p>
+                <a class='spam-back-btn' href='membership.php'>Back to Membership Form</a>
+            </div>
+        </div>
+    </body>
+    </html>
+    ");
+}
+
+// Track attempts
+if (!isset($_SESSION['membership_attempts'])) {
+    $_SESSION['membership_attempts'] = [];
+}
+
+// Add current timestamp
+$_SESSION['membership_attempts'][] = time();
+
+// Remove old timestamps outside the time window
+$_SESSION['membership_attempts'] = array_filter($_SESSION['membership_attempts'], function($t) use ($time_window) {
+    return $t >= time() - $time_window;
+});
+
+// If limit exceeded → block user
+if (count($_SESSION['membership_attempts']) > $limit) {
+    $_SESSION['membership_blocked_until'] = time() + $block_time;
+
+    die("
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Blocked - Too Many Attempts</title>
+        <link rel='stylesheet' href='styles.css'>
+    </head>
+    <body>
+        <div class='spam-block-container'>
+            <div class='spam-block-box'>
+                <h2 class='spam-title'>❌ Spam Protection Triggered</h2>
+                <p>You have exceeded the submission limit.</p>
+                <p>You are blocked for 5 minutes.</p>
+                <a class='spam-back-btn' href='membership.php'>Back to Membership Form</a>
+            </div>
+        </div>
+    </body>
+    </html>
+    ");
+}
 
 // Get form data safely
 $firstName = trim($_POST['firstName'] ?? '');

@@ -3150,6 +3150,45 @@ form .form-actions button[type="reset"]:hover {
     display: inline-block;
 }
 
+/*Anti Spam*/
+.spam-block-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #f9f4e6; /* light beige background */
+}
+
+.spam-block-box {
+    width: 420px;
+    padding: 30px;
+    background: #fff8dc;
+    border-radius: 12px;
+    text-align: center;
+    border: 2px dashed #ff8c00; /* orange dashed border */
+    box-shadow: 0 0 15px rgba(0,0,0,0.15);
+}
+
+.spam-title {
+    color: #ff8c00; /* dark orange */
+    margin-bottom: 18px;
+}
+
+.spam-back-btn {
+    display: inline-block;
+    margin-top: 18px;
+    padding: 12px 20px;
+    background: #32cd32; /* lime green */
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.spam-back-btn:hover {
+    background: #228b22; /* darker green */
+}
+
 
 
 

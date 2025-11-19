@@ -2,9 +2,73 @@
 // enquiry_process.php
 // Process enquiry form submissions
 
+session_start();  //track how many times the user submitted the form
 require_once 'db_connection.php';
 
+//ANTI-SPAM PROTECTION
+$limit = 3; //allow only 3 submissions
+$time_window = 300; //within 300 seconds (only submissions inside this window are counted)
+$block_time = 300; //block for 5 minutes (300seconds)
 
+//if user is still blocked
+if (isset($_SESSION['enquiry_blocked_until']) && time() < $_SESSION['enquiry_blocked_until']){
+    die("
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Blocked - Too Many Attempts</title>
+        <link rel ='stylesheet' href = 'styles.css'>
+    </head>
+    <body>
+        <div class = 'spam-block-container'>
+            <div class ='spam-block-box'>
+                <h2 class = 'spam-title'>⚠️ Temporarily Blocked</h2>
+                <p>You Submitted too many enquires in a short time.</p>
+                <p>Please try again later.</p>
+                <a class ='spam-back-btn' href ='enquiry.php'>Back to Enquiry Page</a>
+            </div>
+        </div>
+    </body>
+    </html>
+    ");
+}
+
+//Track how many Attempts
+if (!isset($_SESSION['enquiry_attempts'])){
+    $_SESSION['enquiry_attempts'] = [];
+}
+//ADD TIMESTAMP
+$_SESSION['enquiry_attempts'][] = time();
+
+//REMOVE OLD TIMESTAMPS (only keep attempts within the $time_window)
+$_SESSION['enquiry_attempts'] = array_filter($_SESSION['enquiry_attempts'], function($t) use ($time_window){
+    return $t >= time() - $time_window;
+});
+
+//IF LIMIT EXCEEDED (count how many attempts remain after filtering old ones)
+if (count($_SESSION['enquiry_attempts']) > $limit){
+    $_SESSION['enquiry_blocked_until'] = time() + $block_time;
+
+    die("
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Blocked - Too Many Attempts</title>
+        <link rel='stylesheet' href='styles.css'>
+    </head>
+    <body>
+        <div class='spam-block-container'>
+            <div class='spam-block-box'>
+                <h2 class='spam-title'>❌ Spam Protection Triggered</h2>
+                <p>You have exceeded the submission limit.</p>
+                <p>You are blocked for 5 minutes.</p>
+                <a class='spam-back-btn' href='enquiry.php'>Back to Enquiry Page</a>
+            </div>
+        </div>
+    </body>
+    </html>
+    ");
+}
 
 // Get form data safely
 $firstName = trim($_POST['firstName'] ?? '');
