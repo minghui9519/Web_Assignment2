@@ -55,7 +55,7 @@ if (count($_SESSION['membership_attempts']) > $limit) {
     <html>
     <head>
         <title>Blocked - Too Many Attempts</title>
-        <link rel='stylesheet' href='styles.css'>
+        <link rel='stylesheet' href='styles.css?v=3'>
     </head>
     <body>
         <div class='spam-block-container'>
@@ -125,7 +125,7 @@ if (!empty($errors)) {
     <html>
     <head>
         <title>Error - Membership Registration</title>
-        <link rel='stylesheet' href='styles.css'>
+        <link rel='stylesheet' href='styles.css?v=3'>
     </head>
     <body>
         <div class='modal-wrapper'>
@@ -167,7 +167,7 @@ if ($stmt->execute()) {
     echo "<!DOCTYPE html><html>
     <head>
      <title>Success - Membership Registration</title>
-     <link rel='stylesheet' href='styles.css'>
+     <link rel='stylesheet' href='styles.css?v=3'>
      </head>
      <body>
         <div class = 'modal-overlay'>
@@ -188,7 +188,7 @@ if ($stmt->execute()) {
      </html>";
 } else {
     echo "<!DOCTYPE html><html><head><title>Error - Membership Registration</title>
-     <link rel='stylesheet' href='styles.css'>
+     <link rel='stylesheet' href='styles.css?v=3'>
      </head
      <body>
         <div class = 'modal-overlay'>
