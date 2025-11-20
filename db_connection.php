@@ -12,7 +12,19 @@ $conn = new mysqli($host, $user, $pass);
 
 // Check connection
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    $errorMsg = "Connection failed: " . $conn->connect_error;
+    
+    // Provide helpful message if connection is refused
+    if (strpos($conn->connect_error, "refused") !== false || strpos($conn->connect_error, "2002") !== false) {
+        $errorMsg .= "<br><br><strong>💡 Solution:</strong> Please make sure MySQL/MariaDB service is running in XAMPP Control Panel.";
+    }
+    
+    // Provide helpful message if host is not allowed (localhost issue)
+    if (strpos($conn->connect_error, "not allowed to connect") !== false || strpos($conn->connect_error, "1130") !== false) {
+        $errorMsg .= "<br><br><strong>💡 Solution:</strong> This error occurs when using 'localhost' on Windows. The connection has been configured to use '127.0.0.1' instead. If this error persists, please check your MySQL user permissions.";
+    }
+    
+    die($errorMsg);
 }
 
 // Create database if it doesn't exist
