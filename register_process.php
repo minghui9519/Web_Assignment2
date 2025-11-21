@@ -46,7 +46,7 @@ $_SESSION['register_attempts'] = array_filter($_SESSION['register_attempts'], fu
     return $t >= time() - $time_window;
 });
 
-// If limit exceeded → block user
+// If limit exceeded, block user
 if (count($_SESSION['register_attempts']) > $limit) {
     $_SESSION['register_blocked_until'] = time() + $block_time;
 
