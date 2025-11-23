@@ -46,7 +46,7 @@ $_SESSION['membership_attempts'] = array_filter($_SESSION['membership_attempts']
     return $t >= time() - $time_window;
 });
 
-// If limit exceeded → block user
+// If limit exceeded, block user
 if (count($_SESSION['membership_attempts']) > $limit) {
     $_SESSION['membership_blocked_until'] = time() + $block_time;
 
