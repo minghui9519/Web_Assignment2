@@ -4,6 +4,12 @@
 
 require_once '../db_connection.php';
 
+$standalone_view = !isset($is_dashboard_context);
+if ($standalone_view) {
+    $view_page_title = 'Workshop Registrations - Root Flower';
+    include 'view_header.php';
+}
+
 $update_message = '';
 $update_type = '';
 
@@ -234,3 +240,9 @@ function buildPageUrl($params = []) {
     </div>
 </div>
 <?php endif; ?>
+
+<?php
+if ($standalone_view) {
+    include 'view_footer.php';
+}
+?>

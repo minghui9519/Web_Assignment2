@@ -23,6 +23,7 @@
             </div>
             <div class="main-content">
                 <?php
+                $is_dashboard_context = true;
                 if (isset($_GET['page'])) {
                     $page = $_GET['page'];
                     // Security: Only allow specific page files

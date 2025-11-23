@@ -66,8 +66,8 @@
                   <p><strong>Need help?</strong></p>
                   <ul>
                       <li>Forgot your password? <a href="mailto:rootflower@gmail.com">Contact us</a> for assistance</li>
-                      <li>Don't have an account? <a href="membership_process.php">Register here</a></li>
-                      <li>Having trouble logging in? <a href="enquiry_process.php">Submit an inquiry</a></li>
+                      <li>Don't have an account? <a href="membership.php">Register here</a></li>
+                      <li>Having trouble logging in? <a href="enquiry.php">Submit an inquiry</a></li>
                   </ul>
               </div>
           </section>

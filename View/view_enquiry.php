@@ -4,6 +4,12 @@
 
 require_once '../db_connection.php';
 
+$standalone_view = !isset($is_dashboard_context);
+if ($standalone_view) {
+    $view_page_title = 'Enquiries - Root Flower';
+    include 'view_header.php';
+}
+
 // Handle status update and delete
 $update_message = '';
 $update_type = '';
@@ -213,3 +219,9 @@ $result = $conn->query($sql);
         </table>
     </div>
 </div>
+
+<?php
+if ($standalone_view) {
+    include 'view_footer.php';
+}
+?>

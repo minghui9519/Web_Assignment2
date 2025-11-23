@@ -4,6 +4,12 @@
 
 require_once '../db_connection.php';
 
+$standalone_view = !isset($is_dashboard_context);
+if ($standalone_view) {
+    $view_page_title = 'Membership Accounts - Root Flower';
+    include 'view_header.php';
+}
+
 // Handle CRUD operations
 $update_message = '';
 $update_type = '';
@@ -448,3 +454,10 @@ function buildPageUrl($params = []) {
     </div>
 </div>
 <?php endif; ?>
+
+<?php
+if ($standalone_view) {
+    include 'view_footer.php';
+}
+?>
+

@@ -61,7 +61,7 @@
                         </div>
                         <br>
 
-                        <a class="info-button" href="register.html">Register Now</a>
+                        <a class="info-button" href="register.php">Register Now</a>
                     </div>
                 </aside>
 

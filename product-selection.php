@@ -17,28 +17,28 @@
       <h1>Product Selection</h1>
   <div class="product-container">
     <div class="product-box">
-      <a href="product1.html">
+      <a href="product1.php">
         <img src="images/handbouquet1.png" alt="Hand Bouquet">
         <h2>Hand Bouquet</h2>
       </a>
     </div>
 
     <div class="product-box">
-      <a href="product2.html">
+      <a href="product2.php">
         <img src="images/cny1.png" alt="CNY Decoration">
         <h2>CNY Decoration</h2>
       </a>
     </div>
 
     <div class="product-box">
-      <a href="product3.html">
+      <a href="product3.php">
         <img src="images/grand1.png" alt="Grand Decoration">
         <h2>Grand Decoration</h2>
       </a>
     </div>
 
     <div class="product-box">
-      <a href="product4.html">
+      <a href="product4.php">
         <img src="images/graduation1.jpg" alt="Graduation">
         <h2>Graduation</h2>
       </a>

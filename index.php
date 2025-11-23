@@ -118,6 +118,7 @@
           <li><a href="https://youtu.be/XIhGkSUv7vY" target="_blank" title="YouTube"><i class="fa-brands fa-youtube"></i></a></li>
           <li><a href="References.php" title="References"><i class="fa-solid fa-book"></i></a></li>
           <li><a href="enhancement1.php" title="Enhancement"><i class="fa-solid fa-rocket"></i></a></li>
+          <li><a href="enhancement2.php" title="Enhancement2"><i class="fa-solid fa-rocket"></i></a></li>
         </ul>
       </div>
   

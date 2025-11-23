@@ -13,6 +13,7 @@ echo
           <li><a href="https://www.instagram.com/root.flowersss/" target="_blank" title="Instagram"><i class="fa-brands fa-instagram"></i></a></li>
           <li><a href="References.php" title="References"><i class="fa-solid fa-book"></i></a></li>
           <li><a href="enhancement1.php" title="Enhancement"><i class="fa-solid fa-rocket"></i></a></li>
+          <li><a href="enhancement2.php" title="Enhancement2"><i class="fa-solid fa-rocket"></i></a></li>
         </ul>
       </div>
   

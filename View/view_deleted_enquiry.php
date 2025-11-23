@@ -4,6 +4,12 @@
 
 require_once '../db_connection.php';
 
+$standalone_view = !isset($is_dashboard_context);
+if ($standalone_view) {
+    $view_page_title = 'Deleted Enquiries - Root Flower';
+    include 'view_header.php';
+}
+
 // Handle restore enquiry
 $update_message = '';
 $update_type = '';
@@ -181,4 +187,10 @@ $result = $conn->query($sql);
         </table>
     </div>
 </div>
+
+<?php
+if ($standalone_view) {
+    include 'view_footer.php';
+}
+?>
 
