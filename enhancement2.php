@@ -212,6 +212,61 @@ $stmt->execute();
                     </ul>
                 </article>
 
+                <article class="enhancement-item">
+                    <h3>5. Database-Driven Admin Authentication System</h3>
+                    <p><strong>How it goes beyond basic requirements:</strong> Instead of hard-coding admin credentials in PHP files, this enhancement implements a secure database-driven authentication system with password hashing, session management, and protected dashboard routes. Admins must authenticate through a login form that validates credentials against a database table, ensuring security and scalability for multiple admin accounts.</p>
+
+                    <p><strong>Code needed to implement:</strong></p>
+                    <div class="code-example">
+<pre><code>// db_connection.php - Admin table creation
+$sql = "CREATE TABLE IF NOT EXISTS admin (
+  admin_id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(50) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)";
+$conn->query($sql);
+
+// login.php - Database authentication
+$sql = "SELECT admin_id, username, password FROM admin WHERE username = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    $admin = $result->fetch_assoc();
+    
+    // Verify password with secure hashing
+    if (password_verify($password, $admin['password'])) {
+        session_start();
+        $_SESSION['admin_id'] = $admin['admin_id'];
+        $_SESSION['admin_username'] = $admin['username'];
+        $_SESSION['admin_logged_in'] = true;
+        
+        header("Location: View/dashboard.php");
+        exit;
+    }
+}
+
+// View/dashboard.php - Session protection
+session_start();
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+    header("Location: ../login.php");
+    exit;
+}</code></pre>
+                    </div>
+
+                    <p><strong>Hyperlink to implementation:</strong> <a href="login.php" target="_blank">Admin Login Page</a> | <a href="View/dashboard.php" target="_blank">Protected Dashboard</a> | <a href="create_admin.php" target="_blank">Admin User Creation</a></p>
+                    <p><strong>Third-party sources:</strong></p>
+                    <ul>
+                        <li>PHP password hashing: <a href="https://www.php.net/manual/en/function.password-hash.php" target="_blank">PHP Manual - password_hash()</a></li>
+                        <li>PHP session management: <a href="https://www.php.net/manual/en/book.session.php" target="_blank">PHP Manual - Session Functions</a></li>
+                        <li>Secure authentication patterns: <a href="https://www.php.net/manual/en/function.password-verify.php" target="_blank">PHP Manual - password_verify()</a></li>
+                        <li>Database security best practices: <a href="https://www.php.net/manual/en/mysqli.quickstart.prepared-statements.php" target="_blank">PHP MySQLi Prepared Statements</a></li>
+                    </ul>
+                </article>
+
 </main>
 
 <?php include("footer.php"); ?>

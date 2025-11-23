@@ -1,3 +1,89 @@
+<?php
+// login.php
+// Admin login with database authentication
+
+session_start();
+
+// Handle logout
+if (isset($_GET['logout']) && $_GET['logout'] == '1') {
+    session_destroy();
+    header("Location: login.php");
+    exit;
+}
+
+require_once 'db_connection.php';
+
+// Initialize variables
+$error_message = '';
+$login_error = false;
+
+// Handle form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login']) && isset($_POST['password'])) {
+    $username = trim($_POST['login'] ?? '');
+    $password = trim($_POST['password'] ?? '');
+    
+    // Validate inputs
+    if (empty($username) || empty($password)) {
+        $error_message = "Please enter both username and password.";
+        $login_error = true;
+    } else {
+        // Query admin table
+        $sql = "SELECT admin_id, username, password FROM admin WHERE username = ?";
+        $stmt = $conn->prepare($sql);
+        
+        if ($stmt) {
+            $stmt->bind_param("s", $username);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            
+            if ($result->num_rows > 0) {
+                $admin = $result->fetch_assoc();
+                
+                // Verify password (support both hashed and plain text for migration)
+                $password_valid = false;
+                
+                // Check if password is hashed (starts with $2y$ for bcrypt)
+                if (password_verify($password, $admin['password'])) {
+                    $password_valid = true;
+                } 
+                // Fallback: check plain text password (for initial setup)
+                elseif ($admin['password'] === $password) {
+                    $password_valid = true;
+                    // Upgrade to hashed password
+                    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+                    $update_sql = "UPDATE admin SET password = ? WHERE admin_id = ?";
+                    $update_stmt = $conn->prepare($update_sql);
+                    $update_stmt->bind_param("si", $hashed_password, $admin['admin_id']);
+                    $update_stmt->execute();
+                    $update_stmt->close();
+                }
+                
+                if ($password_valid) {
+                    // Set session variables and redirect to dashboard
+                    $_SESSION['admin_id'] = $admin['admin_id'];
+                    $_SESSION['admin_username'] = $admin['username'];
+                    $_SESSION['admin_logged_in'] = true;
+                    
+                    // Redirect to dashboard
+                    header("Location: View/dashboard.php");
+                    exit;
+                } else {
+                    $error_message = "Invalid username or password.";
+                    $login_error = true;
+                }
+            } else {
+                $error_message = "Invalid username or password.";
+                $login_error = true;
+            }
+            
+            $stmt->close();
+        } else {
+            $error_message = "Database error. Please try again later.";
+            $login_error = true;
+        }
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,7 +103,13 @@
               <h2>Login</h2>
               <p>Please enter your login ID and password to access your account.</p>
               
-              <form class="inquiry-form" action="#" method="post">
+              <?php if ($login_error && $error_message): ?>
+              <div class="error-message" style="background-color: #f8d7da; color: #721c24; padding: 12px 20px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #f5c6cb;">
+                  <i class="fas fa-exclamation-circle"></i> <?php echo htmlspecialchars($error_message); ?>
+              </div>
+              <?php endif; ?>
+              
+              <form class="inquiry-form" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                   <div class="form-group">
                       <label for="login">Login ID *</label>
                       <input 

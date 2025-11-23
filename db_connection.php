@@ -102,6 +102,15 @@ $sql = "CREATE TABLE IF NOT EXISTS deleted_enquiries (
 )";
 $conn->query($sql);
 
+// Create admin table for login authentication
+$sql = "CREATE TABLE IF NOT EXISTS admin (
+  admin_id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(50) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)";
+$conn->query($sql);
+
 // Set charset to utf8 for proper character encoding
 $conn->set_charset("utf8");
 ?>
