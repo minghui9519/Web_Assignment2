@@ -17,7 +17,7 @@ if (isset($_SESSION['register_blocked_until']) && time() < $_SESSION['register_b
     <html>
     <head>
         <title>Blocked - Too Many Attempts</title>
-        <link rel='stylesheet' href='styles.css'>
+        <link rel='stylesheet' href='styles.css?v=3'>
     </head>
     <body>
         <div class='spam-block-container'>
@@ -46,7 +46,7 @@ $_SESSION['register_attempts'] = array_filter($_SESSION['register_attempts'], fu
     return $t >= time() - $time_window;
 });
 
-// If limit exceeded → block user
+// If limit exceeded, block user
 if (count($_SESSION['register_attempts']) > $limit) {
     $_SESSION['register_blocked_until'] = time() + $block_time;
 
@@ -55,7 +55,7 @@ if (count($_SESSION['register_attempts']) > $limit) {
     <html>
     <head>
         <title>Blocked - Too Many Attempts</title>
-        <link rel='stylesheet' href='styles.css'>
+        <link rel='stylesheet' href='styles.css?v=3'>
     </head>
     <body>
         <div class='spam-block-container'>

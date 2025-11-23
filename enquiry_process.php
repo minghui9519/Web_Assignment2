@@ -17,7 +17,7 @@ if (isset($_SESSION['enquiry_blocked_until']) && time() < $_SESSION['enquiry_blo
     <html>
     <head>
         <title>Blocked - Too Many Attempts</title>
-        <link rel ='stylesheet' href = 'styles.css'>
+        <link rel ='stylesheet' href = 'styles.css?v=3'>
     </head>
     <body>
         <div class = 'spam-block-container'>
@@ -54,7 +54,7 @@ if (count($_SESSION['enquiry_attempts']) > $limit){
     <html>
     <head>
         <title>Blocked - Too Many Attempts</title>
-        <link rel='stylesheet' href='styles.css'>
+        <link rel='stylesheet' href='styles.css?v=3'>
     </head>
     <body>
         <div class='spam-block-container'>

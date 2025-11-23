@@ -2989,7 +2989,8 @@ form .form-actions button[type="reset"]:hover {
 .back-btn {
     background-color: #4caf50;
     color: #fff;
-    margin-top: 10px;
+    margin-top: 20px;
+    
 }
 
 .back-btn:hover {
@@ -3160,36 +3161,45 @@ form .form-actions button[type="reset"]:hover {
 }
 
 .spam-block-box {
-    width: 420px;
-    padding: 30px;
+    width: 600px;
+    padding: 60px;
     background: #fff8dc;
-    border-radius: 12px;
+    border-radius: 15px;
     text-align: center;
-    border: 2px dashed #ff8c00; /* orange dashed border */
-    box-shadow: 0 0 15px rgba(0,0,0,0.15);
+    border: 4px dashed #ff8c00; /* orange dashed border */
+    box-shadow: 0 0 20px rgba(0,0,0,0.15);
 }
 
 .spam-title {
-    color: #ff8c00; /* dark orange */
-    margin-bottom: 18px;
+    color: #ff8c00; 
+    margin-bottom: 30px;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.spam-block-box p{
+    font-size: 20px;
+    margin: 16px 0;
+    line-height: 1.6;
 }
 
 .spam-back-btn {
     display: inline-block;
-    margin-top: 18px;
-    padding: 12px 20px;
-    background: #32cd32; /* lime green */
+    margin-top: 20px;
+    padding: 12px 22px;
+    background: #32cd32; 
     color: white;
-    border-radius: 8px;
+    border-radius: 10px;
     text-decoration: none;
     font-weight: bold;
+    font-size: 18px;
 }
 
 .spam-back-btn:hover {
-    background: #228b22; /* darker green */
+    background: #228b22; 
 }
 
-
+/*228b22
 
 
 
