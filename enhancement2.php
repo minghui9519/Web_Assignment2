@@ -212,6 +212,55 @@ $stmt->execute();
                     </ul>
                 </article>
 
+                <article class="enhancement-item">
+                    <h3>5. Anti-Spam Protection</h3>
+                    <p><strong>How it goes beyond basic requirements:</strong>If a user repeatedly submits an empty form, the system will temporarily block them for 5 minutes to ensure proper usage and prevent misuse.</p>
+
+                    <p><strong>Code needed to implement:</strong></p>
+                    <div class="code-example">
+<pre><code>//ANTI-SPAM PROTECTION
+$limit = 3;            
+$time_window = 180;    
+$block_time = 300;     
+
+// If user is still blocked
+if (isset($_SESSION['membership_blocked_until']) && time() < $_SESSION['membership_blocked_until']) {
+    die("
+    <!DOCTYPE html>
+    <html>...
+    </html>
+    ");
+}
+
+// Track attempts
+if (!isset($_SESSION['membership_attempts'])) {
+    $_SESSION['membership_attempts'] = [];
+}
+
+// Add current timestamp
+$_SESSION['membership_attempts'][] = time();
+
+// Remove old timestamps outside the time window
+$_SESSION['membership_attempts'] = array_filter($_SESSION['membership_attempts'], function($t) use ($time_window) {
+    return $t >= time() - $time_window;
+});
+
+// If limit exceeded, block user
+if (count($_SESSION['membership_attempts']) > $limit) {
+    $_SESSION['membership_blocked_until'] = time() + $block_time;
+
+    die("
+    <!DOCTYPE html>
+    <html>...
+    </html>
+    ");
+}
+</code></pre>
+                    </div>
+
+                    <p><strong>Hyperlink to implementation:</strong> <a href="enquiry_process.php" target="_blank">Enquiry Process</a></p>
+                </article>
+
 </main>
 
 <?php include("footer.php"); ?>
