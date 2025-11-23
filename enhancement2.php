@@ -38,7 +38,7 @@ if (isset($_GET['page']) && in_array($_GET['page'], $allowed_pages)) {
 }</code></pre>
                     </div>
 
-                    <p><strong>Hyperlink to implementation:</strong> <a href="View/dashboard.php" target="_blank">Admin Dashboard Shell</a></p>
+                    <p><strong>Hyperlink to implementation:</strong> <a href="View/dashboard.php" target="_blank">Dashboard</a></p>
                     <p><strong>Third-party sources:</strong></p>
                     <ul>
                         <li>Access control approach adapted from <a href="https://www.php.net/manual/en/function.in-array.php" target="_blank">PHP Manual – in_array</a></li>
@@ -128,7 +128,7 @@ if (isset($_GET['confirm_delete']) && $_GET['confirm_delete'] == 'yes' && isset(
 </code></pre>
                     </div>
 
-                    <p><strong>Hyperlink to implementation:</strong> <a href="View/dashboard.php?page=view_enquiry.php" target="_blank">Enquiry Manager</a> | <a href="View/dashboard.php?page=view_deleted_enquiry.php" target="_blank">Deleted Enquiries</a></p>
+                    <p><strong>Hyperlink to implementation:</strong> <a href="View/dashboard.php?page=view_enquiry.php" target="_blank">Enquiry Viewing</a> | <a href="View/dashboard.php?page=view_deleted_enquiry.php" target="_blank">Deleted Enquiries</a></p>
                     <p><strong>Third-party sources:</strong></p>
                     <ul>
                         <li>Prepared statement pattern referenced from <a href="https://www.php.net/manual/en/mysqli.quickstart.prepared-statements.php" target="_blank">PHP MySQLi Prepared Statements Guide</a></li>
@@ -178,7 +178,7 @@ if (isset($_GET['confirm_delete']) && $_GET['confirm_delete'] == 'yes' && isset(
 </code></pre>
                     </div>
 
-                    <p><strong>Hyperlink to implementation:</strong> <a href="View/dashboard.php?page=view_membership.php&create=1" target="_blank">Membership CRUD</a></p>
+                    <p><strong>Hyperlink to implementation:</strong> <a href="View/dashboard.php?page=view_membership.php&create=1" target="_blank">Membership Registration</a></p>
                     <p><strong>Third-party sources:</strong></p>
                     <ul>
                         <li>Regex validation pattern informed by <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/pattern" target="_blank">MDN HTML Pattern Attribute</a></li>
@@ -257,7 +257,7 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
 }</code></pre>
                     </div>
 
-                    <p><strong>Hyperlink to implementation:</strong> <a href="login.php" target="_blank">Admin Login Page</a> | <a href="View/dashboard.php" target="_blank">Protected Dashboard</a> | <a href="create_admin.php" target="_blank">Admin User Creation</a></p>
+                    <p><strong>Hyperlink to implementation:</strong> <a href="login.php" target="_blank">Login Page</a> | <a href="View/dashboard.php" target="_blank"> Dashboard</a> | <a href="create_admin.php" target="_blank">Admin User Creation</a></p>
                     <p><strong>Third-party sources:</strong></p>
                     <ul>
                         <li>PHP password hashing: <a href="https://www.php.net/manual/en/function.password-hash.php" target="_blank">PHP Manual - password_hash()</a></li>
