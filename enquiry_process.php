@@ -102,8 +102,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (empty($phone)) {
         $errors[] = "Phone Number is required.";
-    } elseif (!preg_match("/^[0-9]{10}$/", $phone)) {
-        $errors[] = "Phone Number must be exactly 10 digits.";
+    } elseif (!preg_match("/^[0-9]{10,11}$/", $phone)) {
+        $errors[] = "Phone Number must be 10 or 11 digits.";
     }
 
     if (empty($enquiry)) {
