@@ -111,6 +111,33 @@ $sql = "CREATE TABLE IF NOT EXISTS admin (
 )";
 $conn->query($sql);
 
+// Automatically create default admin account if it doesn't exist
+// This ensures the admin account is available on any device without manual setup
+$default_username = 'Admin';
+$default_password = 'Admin'; // Default password - should be changed after first login
+
+// Check if admin account exists
+$check_sql = "SELECT admin_id FROM admin WHERE username = ?";
+$check_stmt = $conn->prepare($check_sql);
+if ($check_stmt) {
+    $check_stmt->bind_param("s", $default_username);
+    $check_stmt->execute();
+    $result = $check_stmt->get_result();
+    
+    // If admin doesn't exist, create it
+    if ($result->num_rows == 0) {
+        $hashed_password = password_hash($default_password, PASSWORD_DEFAULT);
+        $insert_sql = "INSERT INTO admin (username, password) VALUES (?, ?)";
+        $insert_stmt = $conn->prepare($insert_sql);
+        if ($insert_stmt) {
+            $insert_stmt->bind_param("ss", $default_username, $hashed_password);
+            $insert_stmt->execute();
+            $insert_stmt->close();
+        }
+    }
+    $check_stmt->close();
+}
+
 // Set charset to utf8 for proper character encoding
 $conn->set_charset("utf8");
 ?>

@@ -261,7 +261,6 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
                     <p><strong>Third-party sources:</strong></p>
                     <ul>
                         <li>PHP password hashing: <a href="https://www.php.net/manual/en/function.password-hash.php" target="_blank">PHP Manual - password_hash()</a></li>
-                        <li>PHP session management: <a href="https://www.php.net/manual/en/book.session.php" target="_blank">PHP Manual - Session Functions</a></li>
                         <li>Secure authentication patterns: <a href="https://www.php.net/manual/en/function.password-verify.php" target="_blank">PHP Manual - password_verify()</a></li>
                         <li>Database security best practices: <a href="https://www.php.net/manual/en/mysqli.quickstart.prepared-statements.php" target="_blank">PHP MySQLi Prepared Statements</a></li>
                     </ul>
