@@ -213,12 +213,12 @@ $stmt->execute();
                 </article>
 
                 <article class="enhancement-item">
-                    <h3>5. Database-Driven Admin Authentication System</h3>
-                    <p><strong>How it goes beyond basic requirements:</strong> Instead of hard-coding admin credentials in PHP files, this enhancement implements a secure database-driven authentication system with password hashing, session management, and protected dashboard routes. Admins must authenticate through a login form that validates credentials against a database table, ensuring security and scalability for multiple admin accounts.</p>
+                    <h3>5. Database-Driven Admin Authentication System with Automatic Account Creation</h3>
+                    <p><strong>How it goes beyond basic requirements:</strong>Admins must authenticate through a login form that validates credentials against a database table, ensuring security and scalability for multiple admin accounts. Additionally, the system automatically creates the default admin account when the database connection is established, making the admin dashboard accessible from any device without manual setup, the admin account is automatically available across all devices that connect to the same database.</p>
 
                     <p><strong>Code needed to implement:</strong></p>
                     <div class="code-example">
-<pre><code>// db_connection.php - Admin table creation
+<pre><code>// db_connection.php - Admin table creation and automatic account creation
 $sql = "CREATE TABLE IF NOT EXISTS admin (
   admin_id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(50) NOT NULL UNIQUE,
@@ -226,6 +226,33 @@ $sql = "CREATE TABLE IF NOT EXISTS admin (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )";
 $conn->query($sql);
+
+// Automatically create default admin account if it doesn't exist
+// This ensures the admin account is available on any device without manual setup
+$default_username = 'Admin';
+$default_password = 'Admin'; // Default password - should be changed after first login
+
+// Check if admin account exists
+$check_sql = "SELECT admin_id FROM admin WHERE username = ?";
+$check_stmt = $conn->prepare($check_sql);
+if ($check_stmt) {
+    $check_stmt->bind_param("s", $default_username);
+    $check_stmt->execute();
+    $result = $check_stmt->get_result();
+    
+    // If admin doesn't exist, create it
+    if ($result->num_rows == 0) {
+        $hashed_password = password_hash($default_password, PASSWORD_DEFAULT);
+        $insert_sql = "INSERT INTO admin (username, password) VALUES (?, ?)";
+        $insert_stmt = $conn->prepare($insert_sql);
+        if ($insert_stmt) {
+            $insert_stmt->bind_param("ss", $default_username, $hashed_password);
+            $insert_stmt->execute();
+            $insert_stmt->close();
+        }
+    }
+    $check_stmt->close();
+}
 
 // login.php - Database authentication
 $sql = "SELECT admin_id, username, password FROM admin WHERE username = ?";
@@ -237,8 +264,23 @@ $result = $stmt->get_result();
 if ($result->num_rows > 0) {
     $admin = $result->fetch_assoc();
     
-    // Verify password with secure hashing
+    // Verify password with secure hashing (supports both hashed and plain text for migration)
+    $password_valid = false;
     if (password_verify($password, $admin['password'])) {
+        $password_valid = true;
+    } elseif ($admin['password'] === $password) {
+        // Fallback: check plain text password (for initial setup)
+        $password_valid = true;
+        // Upgrade to hashed password
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $update_sql = "UPDATE admin SET password = ? WHERE admin_id = ?";
+        $update_stmt = $conn->prepare($update_sql);
+        $update_stmt->bind_param("si", $hashed_password, $admin['admin_id']);
+        $update_stmt->execute();
+        $update_stmt->close();
+    }
+    
+    if ($password_valid) {
         session_start();
         $_SESSION['admin_id'] = $admin['admin_id'];
         $_SESSION['admin_username'] = $admin['username'];
@@ -257,11 +299,10 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
 }</code></pre>
                     </div>
 
-                    <p><strong>Hyperlink to implementation:</strong> <a href="login.php" target="_blank">Login Page</a> | <a href="View/dashboard.php" target="_blank"> Dashboard</a> | <a href="create_admin.php" target="_blank">Admin User Creation</a></p>
+                    <p><strong>Hyperlink to implementation:</strong> <a href="login.php" target="_blank">Login Page</a>| <a href="create_admin.php" target="_blank">Admin User Creation</a></p>
                     <p><strong>Third-party sources:</strong></p>
                     <ul>
                         <li>PHP password hashing: <a href="https://www.php.net/manual/en/function.password-hash.php" target="_blank">PHP Manual - password_hash()</a></li>
-                        <li>PHP session management: <a href="https://www.php.net/manual/en/book.session.php" target="_blank">PHP Manual - Session Functions</a></li>
                         <li>Secure authentication patterns: <a href="https://www.php.net/manual/en/function.password-verify.php" target="_blank">PHP Manual - password_verify()</a></li>
                         <li>Database security best practices: <a href="https://www.php.net/manual/en/mysqli.quickstart.prepared-statements.php" target="_blank">PHP MySQLi Prepared Statements</a></li>
                     </ul>
