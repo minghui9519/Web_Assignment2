@@ -28,7 +28,7 @@
         <input type="email" id="email" name="email" maxlength="100" required placeholder="example@gmail.com">
 
         <label for="phone">Phone Number *</label>
-        <input type="tel" id="phone" name="phone" maxlength="10" required placeholder="0123456789">
+        <input type="tel" id="phone" name="phone" maxlength="11" required placeholder="0123456789">
 
         <label for="membershipType">Membership Type *</label>
         <select id="membershipType" name="membershipType" required>

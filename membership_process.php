@@ -7,7 +7,7 @@ require_once 'db_connection.php';
 
 //ANTI-SPAM PROTECTION
 $limit = 3;            // max submissions allowed
-$time_window = 180;    // 180 seconds
+$time_window = 300;    // 180 seconds
 $block_time = 300;     // 5 minutes block
 
 // If user is still blocked

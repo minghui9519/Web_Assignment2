@@ -28,7 +28,7 @@
         <input type="text" id="email" name="email"  placeholder="example@gmail.com">
 
         <label for="phone">Phone Number *</label>
-        <input type="text" id="phone" name="phone" maxlength="10"  placeholder="0123456789">
+        <input type="text" id="phone" name="phone" maxlength="11"  placeholder="0123456789">
 
         <label for="enquiry">Enquiry Type *</label>
         <select id="enquiry" name="enquiry" required>
